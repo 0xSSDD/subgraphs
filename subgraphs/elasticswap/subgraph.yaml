@@ -1,0 +1,62 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ExchangeFactory
+    network: avalanche
+    source:
+      address: "0x8B3D780Db8842593d8b61632A2F76c4D4f31D7C3"
+      abi: ExchangeFactory
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - NewExchange
+        # - OwnershipTransferred
+        # - SetFeeAddress
+      abis:
+        - name: ExchangeFactory
+          file: ./abis/ExchangeFactory.json
+        - name: Exchange
+          file: ./abis/Exchange.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+      eventHandlers:
+        - event: NewExchange(indexed address,indexed address)
+          handler: handleNewExchange
+      file: ./src/mapping.ts
+# Templates for Contract to support Contracts with Dynamic Addresses
+templates:
+  - kind: ethereum/contract
+    name: Exchange
+    network: avalanche
+    source:
+      abi: Exchange
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      entities:
+        - Transfer
+        - Swap
+      abis:
+        - name: Exchange
+          file: ./abis/Exchange.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+        - name: ERC20SymbolBytes
+          file: ./abis/ERC20SymbolBytes.json
+        - name: ERC20NameBytes
+          file: ./abis/ERC20NameBytes.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleTransfer
+        - event: Swap(indexed address,uint256,uint256,uint256,uint256)
+          handler: handleSwap

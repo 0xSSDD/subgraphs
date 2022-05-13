@@ -1,0 +1,47 @@
+type Token @entity {
+  " Smart contract address of the token "
+  id: ID!
+
+   " Symbol of the token, mirrored from the smart contract "
+  symbol: String!
+  
+   " Name of the token, mirrored from the smart contract "
+  name: String!
+
+   " The number of decimal places this token uses, default to 18 "
+  decimals: BigDecimal!
+
+  totalSupply: BigInt!
+
+  "Address of the Factory Contract"
+  exchangeFactoryAddress: Bytes!
+}
+
+type Exchange @entity {
+  id: ID!
+  creator: Bytes! # address
+  exchangeAddress: Bytes! # address
+  baseToken: Token!
+  quoteToken: Token!
+  minimumLiquidity: BigInt!
+  totalSupply: BigInt!
+  baseTokenReserveQty: BigInt!
+  quoteTokenReserveQty: BigInt!
+  kLast: BigInt!
+}
+
+type Transfer @entity {
+  id: ID!
+  from: Bytes! # address
+  to: Bytes # address
+  value: BigInt!
+}
+
+type Swap @entity {
+  id: ID!
+  baseTokenQtyIn: BigInt!
+  baseTokenQtyOut: BigInt!
+  quoteTokenQtyIn: BigInt!
+  quoteTokenQtyOut: BigInt!
+  sender: Bytes!
+}
